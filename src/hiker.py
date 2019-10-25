@@ -1,3 +1,6 @@
+import functools
+
+
 class Haiku:
 
     VOWELS = list('aeiouy')
@@ -8,15 +11,11 @@ class Haiku:
 
     @staticmethod
     def count_syllables(word: str) -> int:
-        """Return number of syllables in a string."""
-        prev = None
+        """Return the number of syllables in a string."""
         count = 0
 
-        for char in word:
-            if char in Haiku.VOWELS and prev not in Haiku.VOWELS:
-                count += 1
-
-            prev = char
+        for i in range(len(word)):
+            count += word[i] in Haiku.VOWELS and word[i-1:i] not in Haiku.VOWELS
 
         return count
 
