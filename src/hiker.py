@@ -1,20 +1,19 @@
-class Haiku(object):
+class Haiku:
 
-    vowels = list('aeiouy')
-    correct_pattern = [5, 7, 5]
+    VOWELS = list('aeiouy')
+    CORRECT_PATTERN = (5, 7, 5)
 
-    def __init__(self, haiku=None):
-        self.input_string = haiku
+    def __init__(self, s: str = ''):
+        self._input_string = s.strip()
 
     @staticmethod
-    def count_syllables(word):
-        """Return number of syllables in a string as an integer"""
-        characters_in_word = list(word)
+    def count_syllables(word: str) -> int:
+        """Return number of syllables in a string."""
         prev = None
         count = 0
 
-        for char in characters_in_word:
-            if char in Haiku.vowels and prev not in Haiku.vowels:
+        for char in word:
+            if char in Haiku.VOWELS and prev not in Haiku.VOWELS:
                 count += 1
 
             prev = char
@@ -22,51 +21,21 @@ class Haiku(object):
         return count
 
     @property
-    def syllables(self):
-        """Return a list of the number of syllable in each part of a
-        haiku as an array.
+    def syllables(self) -> tuple:
+        """Return a tuple of the number of syllables."""
+        return tuple(self.count_syllables(p) for p in self._input_string.split('/'))
+
+    def is_correct(self) -> bool:
+        """Return True if input is a correct haiku, otherwise False."""
+        return self.syllables == self.CORRECT_PATTERN
+
+    def calculate(self) -> str:
+        """Return a string of the comma-separated number of syllables followed
+        'Yes' for a correct haiku or 'No' for an incorrect haiku.
         """
-        counts = []
-
-        for part in self.input_string.split('/'):
-            counts.append(Haiku.count_syllables(part))
-
-        return counts
-
-    @property
-    def isCorrect(self):
-        """Return whether or not a list of syllable counts can be
-        considrered a correct haiku.
-        """
-
-        if len(self.syllables) != len(Haiku.correct_pattern):
-            return False
-
-        for i, _ in enumerate(self.syllables):
-            if self.syllables[i] != Haiku.correct_pattern[i]:
-                return False
-
-        return True
-
-    def __repr__(self):
-        """Build the output string according to the example output in
-        the spec. The `readme.txt` indicates that a simple 'Y' or 'N'
-        should be used, but the example output shows the full 'Yes'
-        and 'No' words. I'll use the words, as that's the exact type
-        of string requested, and it can be grepped down to 'Y' or 'N'
-        anyways.
-        """
-
-        if self.input_string is None:
-            raise ValueError('No input string for this Haiku was supplied')
-
-        ret = self.syllables[:]
-        ret.append('Yes' if self.isCorrect else 'No')
-
-        return ','.join(str(x) for x in ret)
+        return f"{','.join(str(s) for s in self.syllables)},{'Yes' if self.is_correct() else 'No'}"
 
 
 if __name__ == '__main__':  # pragma: no cover
     haiku = Haiku(input('Enter your haiku: '))
-
-    print(f'Output: {haiku}')
+    print(haiku.calculate())
