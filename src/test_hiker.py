@@ -1,13 +1,13 @@
 import io
+import os
 import unittest
-from contextlib import redirect_stdout
-
-import hiker
+import subprocess
+import sys
 
 
 class TestHiker(unittest.TestCase):
     inputs_and_expected_ouputs = [
-        # Empty inputs
+        # Empty inputs.
         ('', '0,No'),
 
         # Troublesome one- and two-letter inputs.
@@ -38,18 +38,19 @@ class TestHiker(unittest.TestCase):
         ('happy purple frog/eating bugs in the marshes/get indigestion', '5,7,5,Yes'),
         ('computer programs/the bugs try to eat my code/i will not let them', '5,8,5,No'),
 
-        # Custom haiku.
+        # Custom haikus.
         ('lame clean code/complex makes me happy/sorry debugger', '5,7,5,Yes'),
+        ('input needs a tty/i will not give it one/what an outrage', '5,8,5,No'),
+        ("it's almost perfect/just one line to go/imports galore", '5,7,5,Yes'),
     ]
 
-    def test_main(self):
-        for input_string, expected_output in self.inputs_and_expected_ouputs:
-            my_stdout = io.StringIO()
+    def test_hiker(self):
+        cmd = [sys.executable, os.path.join('src', 'hiker.py')]
 
-            with redirect_stdout(my_stdout):
-                hiker.main(input_string)
-                actual_output = my_stdout.getvalue().rstrip('\n')
-                self.assertEqual(actual_output, expected_output, f'input = "{input_string}"')
+        for input_, expected_output in self.inputs_and_expected_ouputs:
+            input_ = bytes(input_ + os.linesep, encoding='utf8')
+            output = subprocess.check_output(cmd, input=input_).decode('utf8').strip()
+            self.assertEqual(output, expected_output, msg=f'input = {input_}')
 
 
 if __name__ == '__main__':
