@@ -1,4 +1,4 @@
-import functools
+from functools import reduce
 
 
 class Haiku:
@@ -12,12 +12,7 @@ class Haiku:
     @staticmethod
     def count_syllables(word: str) -> int:
         """Return the number of syllables in a string."""
-        count = 0
-
-        for i in range(len(word)):
-            count += word[i] in Haiku.VOWELS and word[i-1:i] not in Haiku.VOWELS
-
-        return count
+        return reduce(lambda total, cur: total + cur, (word[i] in Haiku.VOWELS and word[i-1:i] not in Haiku.VOWELS for i in range(len(word))), 0)
 
     @property
     def syllables(self) -> tuple:
