@@ -1,64 +1,46 @@
+import io
 import unittest
+from contextlib import redirect_stdout
 
-from hiker import Haiku
+import hiker
 
 
 class TestHaiku(unittest.TestCase):
-
-    test_haikus = [
-        {
-            'input_string': 'happy purple frog/eating bugs in the marshes/get indigestion',
-            'syllables': (5, 7, 5),
-            'is_correct': True,
-            'calculate': '5,7,5,Yes'
-        },
-        {
-            'input_string': 'computer programs/the bugs try to eat my code/i will not let them',
-            'syllables': (5, 8, 5),
-            'is_correct': False,
-            'calculate': '5,8,5,No'
-        }
-    ]
-
-    def test_count_syllables(self):
-        # Empty inputs.
-        self.assertEqual(Haiku.count_syllables(''), 0)
+    inputs_and_expected_ouputs = [
+        # Empty inputs
+        ('', '0,No'),
 
         # Troublesome one- and two-letter inputs.
-        self.assertEqual(Haiku.count_syllables('a'), 1)
-        self.assertEqual(Haiku.count_syllables('a a '), 2)
-        self.assertEqual(Haiku.count_syllables(' a a'), 2)
-        self.assertEqual(Haiku.count_syllables('b'), 0)
-        self.assertEqual(Haiku.count_syllables('b b '), 0)
-        self.assertEqual(Haiku.count_syllables(' b a'), 1)
+        ('a', '1,No'),
+        ('a a ', '2,No'),
+        (' a a', '2,No'),
+        ('b', '0,No'),
+        ('b b ', '0,No'),
+        (' b a', '1,No'),
 
         # Normal words.
-        self.assertEqual(Haiku.count_syllables('happy'), 2)
-        self.assertEqual(Haiku.count_syllables('abaaaabaaaba'), 4)
-        self.assertEqual(Haiku.count_syllables('happy purple frog'), 5)
+        ('happy', '2,No'),
+        ('abaaaabaaaba', '4,No'),
+        ('happy purple frog', '5,No'),
 
         # Extra whitespace.
-        self.assertEqual(Haiku.count_syllables('         happy'), 2)
-        self.assertEqual(Haiku.count_syllables('happy         '), 2)
-        self.assertEqual(Haiku.count_syllables('\t\t happy\r\n'), 2)
+        ('         happy', '2,No'),
+        ('happy         ', '2,No'),
+        ('\t\t happy\r\n', '2,No'),
 
-    def test_empty_object_instantiation_returns_a_haiku_object(self):
-        self.assertIsInstance(Haiku(), Haiku)
+        # Example provided by the spec.
+        ('happy purple frog/eating bugs in the marshes/get indigestion', '5,7,5,Yes'),
+        ('computer programs/the bugs try to eat my code/i will not let them', '5,8,5,No'),
+    ]
 
-    def test_syllables_property(self):
-        for haiku in self.test_haikus:
-            obj = Haiku(haiku['input_string'])
-            self.assertEqual(obj.syllables, haiku['syllables'])
+    def test_main(self):
+        for input_string, expected_output in self.inputs_and_expected_ouputs:
+            my_stdout = io.StringIO()
 
-    def test_is_correct(self):
-        for haiku in self.test_haikus:
-            obj = Haiku(haiku['input_string'])
-            self.assertEqual(obj.is_correct(), haiku['is_correct'])
-
-    def test_calculate(self):
-        for haiku in self.test_haikus:
-            obj = Haiku(haiku['input_string'])
-            self.assertEqual(obj.calculate(), haiku['calculate'])
+            with redirect_stdout(my_stdout):
+                hiker.main(input_string)
+                actual_output = my_stdout.getvalue().rstrip('\n')
+                self.assertEqual(actual_output, expected_output, f'input = "{input}"')
 
 
 if __name__ == '__main__':
