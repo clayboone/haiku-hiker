@@ -28,9 +28,16 @@ class TestHaiku(unittest.TestCase):
         ('happy         ', '2,No'),
         ('\t\t happy\r\n', '2,No'),
 
+        # Different number of lines.
+        ('happy / happy', '2,2,No'),
+        ('happy / happy / happy', '2,2,2,No'),
+        ('happy / happy / happy / happy', '2,2,2,2,No'),
+        ('happy / happy / happy / happy / happy', '2,2,2,2,2,No'),
+
         # Example provided by the spec.
         ('happy purple frog/eating bugs in the marshes/get indigestion', '5,7,5,Yes'),
         ('computer programs/the bugs try to eat my code/i will not let them', '5,8,5,No'),
+        ('lame clean code/complex makes me happy/sorry debugger', '5,7,5,Yes'),
     ]
 
     def test_main(self):
