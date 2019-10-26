@@ -5,7 +5,7 @@ from contextlib import redirect_stdout
 import hiker
 
 
-class TestHaiku(unittest.TestCase):
+class TestHiker(unittest.TestCase):
     inputs_and_expected_ouputs = [
         # Empty inputs
         ('', '0,No'),
@@ -47,7 +47,7 @@ class TestHaiku(unittest.TestCase):
             with redirect_stdout(my_stdout):
                 hiker.main(input_string)
                 actual_output = my_stdout.getvalue().rstrip('\n')
-                self.assertEqual(actual_output, expected_output, f'input = "{input}"')
+                self.assertEqual(actual_output, expected_output, f'input = "{input_string}"')
 
 
 if __name__ == '__main__':
