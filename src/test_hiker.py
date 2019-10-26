@@ -37,6 +37,8 @@ class TestHiker(unittest.TestCase):
         # Example provided by the spec.
         ('happy purple frog/eating bugs in the marshes/get indigestion', '5,7,5,Yes'),
         ('computer programs/the bugs try to eat my code/i will not let them', '5,8,5,No'),
+
+        # Custom haiku.
         ('lame clean code/complex makes me happy/sorry debugger', '5,7,5,Yes'),
     ]
 
