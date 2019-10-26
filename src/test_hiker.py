@@ -1,8 +1,8 @@
 import io
 import os
-import unittest
 import subprocess
 import sys
+import unittest
 
 
 class TestHiker(unittest.TestCase):
@@ -40,7 +40,7 @@ class TestHiker(unittest.TestCase):
 
         # Custom haikus.
         ('lame clean code/complex makes me happy/sorry debugger', '5,7,5,Yes'),
-        ('input needs a tty/i will not give it one/what an outrage', '5,8,5,No'),
+        ('input wants a tty/it cannot have one/what an outrage', '5,7,5,Yes'),
         ("it's almost perfect/just one line to go/imports galore", '5,7,5,Yes'),
     ]
 
